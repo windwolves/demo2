@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leading.demo2.domain.SmsObject;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class SmsControllerTest {
     }
 
     @Test
+    @Ignore//Ignore this to avoid wasting the credit on auto-test
     public void testWithValidMessage() throws IOException {
         String smsObjectString = "{\n" +
                 "  \"message\": \"TEst\",\n" +
@@ -46,12 +48,7 @@ public class SmsControllerTest {
         HttpEntity<SmsObject> request = new HttpEntity<>(mapper.readValue(smsObjectString, SmsObject.class));
         ResponseEntity<String> response = rest.exchange("/api/rest/sms", HttpMethod.POST,
                 request, String.class);
-        String expectedResponseString = "\n" +
-                "This message has been sent to the target(s):[18017766036] via textLocal.\n" +
-                "This message has been sent to the target(s):[] via twilio.\n" +
-                "But failed to send this message to these targets:[000].";
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedResponseString, response.getBody());
     }
 
     @Test
